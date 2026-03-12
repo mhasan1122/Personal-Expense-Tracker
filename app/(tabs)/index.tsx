@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   RefreshControl,
+  Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -30,7 +31,14 @@ export default function DashboardScreen() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor }]} edges={['top']}>
       <View style={styles.header}>
-        <ThemedText type="title">Dashboard</ThemedText>
+        <View style={styles.headerTitleRow}>
+          <Image
+            source={require('@/assets/images/LOGO.jpg')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <ThemedText type="title">Dashboard</ThemedText>
+        </View>
         <View style={styles.headerActions}>
           <ThemeToggle />
           <TouchableOpacity onPress={() => router.push('/(tabs)/add')}>
@@ -107,6 +115,16 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(128, 128, 128, 0.2)',
+  },
+  headerTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  logo: {
+    width: 36,
+    height: 36,
+    borderRadius: 8,
   },
   headerActions: {
     flexDirection: 'row',

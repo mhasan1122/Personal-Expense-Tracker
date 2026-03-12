@@ -5,6 +5,7 @@ export type Category =
   | 'Transport'
   | 'Shopping'
   | 'Bills'
+  | 'Rent'
   | 'Salary'
   | 'Others';
 
@@ -24,6 +25,7 @@ export const CATEGORIES: Category[] = [
   'Transport',
   'Shopping',
   'Bills',
+  'Rent',
   'Salary',
   'Others',
 ];
@@ -34,5 +36,6 @@ export const EXPENSE_CATEGORIES: Category[] = [
   'Transport',
   'Shopping',
   'Bills',
+  'Rent',
   'Others',
 ];

@@ -1,9 +1,11 @@
+import { CURRENCY_SYMBOL } from '@/constants/theme';
+
 /**
- * Format amount for display with currency symbol
+ * Format amount for display with currency symbol (Taka ৳)
  */
 export function formatAmount(amount: number, type?: 'income' | 'expense'): string {
   const sign = type === 'income' ? '+' : type === 'expense' ? '-' : '';
-  return `${sign}$${Math.abs(amount).toFixed(2)}`;
+  return `${sign}${CURRENCY_SYMBOL}${Math.abs(amount).toFixed(2)}`;
 }
 
 /**

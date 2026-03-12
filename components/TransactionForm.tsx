@@ -134,7 +134,7 @@ export function TransactionForm({
         </View>
 
         <View style={styles.section}>
-          <ThemedText style={styles.label}>Amount ($)</ThemedText>
+          <ThemedText style={styles.label}>Amount (৳)</ThemedText>
           <TextInput
             style={[styles.input, { color: textColor, borderColor }]}
             value={amount}

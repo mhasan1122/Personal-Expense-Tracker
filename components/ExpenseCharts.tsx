@@ -4,12 +4,14 @@ import { PieChart, BarChart } from 'react-native-chart-kit';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { ThemedText } from '@/components/themed-text';
+import { CURRENCY_SYMBOL } from '@/constants/theme';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Food: '#f59e0b',
   Transport: '#3b82f6',
   Shopping: '#ec4899',
   Bills: '#8b5cf6',
+  Rent: '#14b8a6',
   Salary: '#22c55e',
   Others: '#6b7280',
 };
@@ -36,6 +38,7 @@ export function ExpenseCharts({
   monthlyData = [],
 }: ExpenseChartsProps) {
   const textColor = useThemeColor({}, 'text');
+  const backgroundColor = useThemeColor({}, 'background');
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
@@ -55,13 +58,15 @@ export function ExpenseCharts({
   };
 
   const chartConfig = {
-    backgroundColor: 'transparent',
-    backgroundGradientFrom: 'transparent',
-    backgroundGradientTo: 'transparent',
+    backgroundColor,
+    backgroundGradientFrom: backgroundColor,
+    backgroundGradientTo: backgroundColor,
     decimalPlaces: 0,
     color: (opacity = 1) =>
       isDark ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
     labelColor: () => textColor,
+    fillShadowGradient: isDark ? '#3b82f6' : '#0a7ea4',
+    fillShadowGradientOpacity: 1,
   };
 
   if (pieData.length === 0 && monthlyData.length === 0) {
@@ -98,11 +103,11 @@ export function ExpenseCharts({
             Monthly Expenses
           </ThemedText>
           <BarChart
-            style={styles.barChart}
+            style={[styles.barChart, { backgroundColor }]}
             data={barData}
             width={screenWidth}
             height={220}
-            yAxisLabel="$"
+            yAxisLabel={CURRENCY_SYMBOL}
             yAxisSuffix=""
             chartConfig={chartConfig}
             fromZero

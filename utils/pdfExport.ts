@@ -1,5 +1,7 @@
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
+import { CURRENCY_SYMBOL } from '@/constants/theme';
+
 interface MonthlyReportData {
   totalIncome: number;
   totalExpense: number;
@@ -71,15 +73,15 @@ export async function generateAndSharePDF(data: MonthlyReportData): Promise<void
       <div class="summary">
         <div class="summary-row">
           <span>Total Income</span>
-          <span class="income">+$${data.totalIncome.toFixed(2)}</span>
+          <span class="income">+${CURRENCY_SYMBOL}${data.totalIncome.toFixed(2)}</span>
         </div>
         <div class="summary-row">
           <span>Total Expense</span>
-          <span class="expense">-$${data.totalExpense.toFixed(2)}</span>
+          <span class="expense">-${CURRENCY_SYMBOL}${data.totalExpense.toFixed(2)}</span>
         </div>
         <div class="summary-row total">
           <span>Balance</span>
-          <span class="balance">$${data.balance.toFixed(2)}</span>
+          <span class="balance">${CURRENCY_SYMBOL}${data.balance.toFixed(2)}</span>
         </div>
       </div>
       <h2>Expenses by Category</h2>
@@ -90,7 +92,7 @@ export async function generateAndSharePDF(data: MonthlyReportData): Promise<void
                 (c) => `
         <div class="category-row">
           <span>${c.category}</span>
-          <span>$${c.amount.toFixed(2)}</span>
+          <span>${CURRENCY_SYMBOL}${c.amount.toFixed(2)}</span>
         </div>
       `
               )

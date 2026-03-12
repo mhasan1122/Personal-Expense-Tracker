@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { ThemedText } from '@/components/themed-text';
+import { CURRENCY_SYMBOL } from '@/constants/theme';
 
 interface SummaryCardProps {
   title: string;
@@ -31,7 +32,7 @@ export function SummaryCard({ title, amount, type }: SummaryCardProps) {
         : balanceColor;
 
   const sign = type === 'income' ? '+' : type === 'expense' ? '-' : '';
-  const displayAmount = `${sign}$${Math.abs(amount).toFixed(2)}`;
+  const displayAmount = `${sign}${CURRENCY_SYMBOL}${Math.abs(amount).toFixed(2)}`;
 
   return (
     <View style={styles.card}>

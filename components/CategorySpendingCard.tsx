@@ -1,13 +1,14 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useThemeColor } from '@/hooks/use-theme-color';
 import { ThemedText } from '@/components/themed-text';
+import { CURRENCY_SYMBOL } from '@/constants/theme';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Food: '#f59e0b',
   Transport: '#3b82f6',
   Shopping: '#ec4899',
   Bills: '#8b5cf6',
+  Rent: '#14b8a6',
   Salary: '#22c55e',
   Others: '#6b7280',
 };
@@ -30,7 +31,7 @@ export function CategorySpendingCard({
     <View style={styles.container}>
       <View style={styles.header}>
         <ThemedText type="defaultSemiBold">{category}</ThemedText>
-        <ThemedText style={styles.amount}>${amount.toFixed(2)}</ThemedText>
+        <ThemedText style={styles.amount}>{CURRENCY_SYMBOL}{amount.toFixed(2)}</ThemedText>
       </View>
       <View style={styles.barContainer}>
         <View
