@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -84,9 +84,15 @@ export function TransactionForm({
 
   const categories = type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
 
+  // Keep ref in sync so handleSubmit always reads latest values (avoids stale closure)
+  const formRef = useRef({ title, amount, type, category, date, note });
+  formRef.current = { title, amount, type, category, date, note };
+
   const handleSubmit = () => {
-    const trimmedTitle = title.trim();
-    const amountNum = parseFloat(amount);
+    const { title: t, amount: a, type: ty, category: cat, date: d, note: n } =
+      formRef.current;
+    const trimmedTitle = t.trim();
+    const amountNum = parseFloat(a);
 
     if (!trimmedTitle) {
       Alert.alert('Error', 'Please enter a title');
@@ -100,10 +106,10 @@ export function TransactionForm({
     onSubmit({
       title: trimmedTitle,
       amount: amountNum,
-      type,
-      category,
-      date,
-      note: note.trim() || undefined,
+      type: ty,
+      category: cat,
+      date: d,
+      note: n.trim() || undefined,
     });
   };
 

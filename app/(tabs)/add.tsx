@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -10,9 +10,11 @@ import { useThemeColor } from '@/hooks/use-theme-color';
 export default function AddTransactionScreen() {
   const router = useRouter();
   const { addTransaction } = useTransactions();
+  const [formKey, setFormKey] = useState(0);
 
   const handleSubmit = async (data: Parameters<typeof addTransaction>[0]) => {
     await addTransaction(data);
+    setFormKey((k) => k + 1);
     router.back();
   };
 
@@ -27,7 +29,11 @@ export default function AddTransactionScreen() {
       <View style={styles.header}>
         <ThemedText type="title">Add Transaction</ThemedText>
       </View>
-      <TransactionForm onSubmit={handleSubmit} onCancel={handleCancel} />
+      <TransactionForm
+        key={formKey}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+      />
     </SafeAreaView>
   );
 }
