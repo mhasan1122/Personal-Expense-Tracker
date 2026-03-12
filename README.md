@@ -1,50 +1,71 @@
-# Welcome to your Expo app 👋
+# Personal Expense Tracker
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A complete React Native mobile app built with Expo for tracking income and expenses. Features categorization, monthly reports, charts, and PDF export.
 
-## Get started
+## Features
 
-1. Install dependencies
+### Core Features
+- **Add Transaction** – Title, amount, type (Income/Expense), category, date, optional note
+- **Transaction List** – Visual distinction for income (green) vs expense (red)
+- **Category-wise Spending** – Grouped totals per category with progress bars
+- **Monthly Report** – Total income, total expense, remaining balance
+- **Charts** – Pie chart for category spending, bar chart for monthly expenses
+- **Export Report** – PDF export and share via expo-print and expo-sharing
 
-   ```bash
-   npm install
-   ```
+### Extra Features
+- **Dark Mode** – Automatic light/dark theme based on system preference
+- **Filter Transactions** – Filter by date range
+- **Edit & Delete** – Long-press to delete, tap to edit
+- **Persistent Storage** – AsyncStorage for data persistence
 
-2. Start the app
+## Tech Stack
 
-   ```bash
-   npx expo start
-   ```
+- **Framework:** React Native with Expo
+- **Language:** TypeScript
+- **Storage:** AsyncStorage
+- **Navigation:** Expo Router (React Navigation)
+- **Charts:** react-native-chart-kit
+- **PDF Export:** expo-print, expo-sharing
 
-In the output, you'll find options to open the app in a
+## Project Structure
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+├── app/
+│   ├── (tabs)/           # Tab screens
+│   │   ├── index.tsx     # Dashboard
+│   │   ├── add.tsx       # Add Transaction
+│   │   ├── history.tsx   # Transaction History
+│   │   └── reports.tsx   # Reports & Charts
+│   ├── modal.tsx         # Edit Transaction (modal)
+│   └── _layout.tsx       # Root layout
+├── components/           # Reusable UI components
+├── contexts/             # React contexts (TransactionContext)
+├── hooks/                # Custom hooks
+├── storage/              # AsyncStorage logic
+├── types/                # TypeScript types
+└── utils/                # Formatting, PDF export
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Getting Started
 
-## Learn more
+```bash
+# Install dependencies
+npm install
 
-To learn more about developing your project with Expo, look at the following resources:
+# Start development server
+npx expo start
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+# Run on iOS
+npx expo start --ios
 
-## Join the community
+# Run on Android
+npx expo start --android
 
-Join our community of developers creating universal apps.
+# Run on Web
+npx expo start --web
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Categories
+
+**Expense:** Food, Transport, Shopping, Bills, Others  
+**Income:** Salary, Others

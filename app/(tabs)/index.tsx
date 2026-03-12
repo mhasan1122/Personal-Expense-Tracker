@@ -1,98 +1,142 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { SummaryCard } from '@/components/SummaryCard';
+import { TransactionItem } from '@/components/TransactionItem';
+import { useTransactions } from '@/contexts/TransactionContext';
+import { useTransactionSummary } from '@/hooks/useTransactionSummary';
+import { useThemeColor } from '@/hooks/use-theme-color';
 
-export default function HomeScreen() {
+export default function DashboardScreen() {
+  const router = useRouter();
+  const { transactions, loading, deleteTransaction, refreshTransactions } =
+    useTransactions();
+  const { totalIncome, totalExpense, balance, transactions: monthlyTransactions } =
+    useTransactionSummary(transactions);
+  const tintColor = useThemeColor({}, 'tint');
+  const backgroundColor = useThemeColor({}, 'background');
+
+  const recentTransactions = monthlyTransactions.slice(0, 5);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <SafeAreaView style={[styles.container, { backgroundColor }]} edges={['top']}>
+      <View style={styles.header}>
+        <ThemedText type="title">Dashboard</ThemedText>
+        <TouchableOpacity onPress={() => router.push('/(tabs)/add')}>
+          <ThemedText style={[styles.addButton, { color: tintColor }]}>
+            + Add
+          </ThemedText>
+        </TouchableOpacity>
+      </View>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={refreshTransactions} />
+        }>
+        <View style={styles.summaryRow}>
+          <SummaryCard title="Income" amount={totalIncome} type="income" />
+          <View style={styles.cardSpacer} />
+          <SummaryCard title="Expense" amount={totalExpense} type="expense" />
+        </View>
+        <View style={styles.summaryRow}>
+          <SummaryCard
+            title="Balance"
+            amount={balance}
+            type="balance"
+          />
+        </View>
+
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <ThemedText type="subtitle">Recent Transactions</ThemedText>
+            <TouchableOpacity onPress={() => router.push('/(tabs)/history')}>
+              <ThemedText style={[styles.seeAll, { color: tintColor }]}>
+                See All
+              </ThemedText>
+            </TouchableOpacity>
+          </View>
+          {recentTransactions.length === 0 ? (
+            <ThemedText style={styles.emptyText}>
+              No transactions this month. Tap + Add to get started!
+            </ThemedText>
+          ) : (
+            recentTransactions.map((t) => (
+              <TransactionItem
+                key={t.id}
+                transaction={t}
+                onEdit={(trans) =>
+                  router.push({
+                    pathname: '/modal',
+                    params: { id: trans.id, mode: 'edit' },
+                  })
+                }
+                onDelete={deleteTransaction}
+              />
+            ))
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+  },
+  header: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(128, 128, 128, 0.2)',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  addButton: {
+    fontSize: 18,
+    fontWeight: '600',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 20,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    marginBottom: 12,
+    gap: 12,
+  },
+  cardSpacer: {
+    width: 12,
+  },
+  section: {
+    marginTop: 24,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  seeAll: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  emptyText: {
+    opacity: 0.7,
+    fontStyle: 'italic',
   },
 });
