@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/themed-text';
 import { SummaryCard } from '@/components/SummaryCard';
 import { TransactionItem } from '@/components/TransactionItem';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { useTransactions } from '@/contexts/TransactionContext';
 import { useTransactionSummary } from '@/hooks/useTransactionSummary';
 import { useThemeColor } from '@/hooks/use-theme-color';
@@ -30,11 +31,14 @@ export default function DashboardScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor }]} edges={['top']}>
       <View style={styles.header}>
         <ThemedText type="title">Dashboard</ThemedText>
-        <TouchableOpacity onPress={() => router.push('/(tabs)/add')}>
-          <ThemedText style={[styles.addButton, { color: tintColor }]}>
-            + Add
-          </ThemedText>
-        </TouchableOpacity>
+        <View style={styles.headerActions}>
+          <ThemeToggle />
+          <TouchableOpacity onPress={() => router.push('/(tabs)/add')}>
+            <ThemedText style={[styles.addButton, { color: tintColor }]}>
+              + Add
+            </ThemedText>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView
@@ -103,6 +107,10 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(128, 128, 128, 0.2)',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   addButton: {
     fontSize: 18,
